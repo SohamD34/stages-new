@@ -1,18 +1,19 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { NotificationsService } from './notifications.service';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Notification, NotificationDocument } from './notification.schema';
 
-describe('NotificationsService', () => {
-  let service: NotificationsService;
+@Injectable()
+export class NotificationsService {
+  constructor(@InjectModel(Notification.name) private notificationModel: Model<NotificationDocument>) {}
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [NotificationsService],
-    }).compile();
+  async registerDevice(userId: string, deviceToken: string): Promise<{ message: string }> {
+    const newNotification = new this.notificationModel({
+      user_id: userId,
+      device_token: deviceToken,
+    });
+    await newNotification.save();
 
-    service = module.get<NotificationsService>(NotificationsService);
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
-});
+    return { message: 'Device registered for notifications.' };
+  }
+}
