@@ -7,3 +7,8 @@ docker build -t nestjs-app .
 ```bash
 docker run -p 3000:3000 nestjs-app
 ```
+
+# To open the Swagger UI and access the APIs, paste this in your browser
+```
+http://localhost:3000/api-docs
+```
